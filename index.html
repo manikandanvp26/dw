@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataNexus — Real-Time Data Warehouse & Preprocessing Platform</title>
+<meta name="description" content="Design and Development of a Real-Time Data Warehouse and Data Preprocessing Solution for E-Commerce and Healthcare Analytics.">
+<style>
+/* ================= FONTS (merged from the Google Fonts CSS file) ================= */
+/* Archivo — variable font, one file covers weights 400–700 */
+/* vietnamese */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 700;font-stretch:100%;font-display:swap;src:url(https://fonts.gstatic.com/s/archivo/v25/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLySOxK-vA.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+/* latin-ext */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 700;font-stretch:100%;font-display:swap;src:url(https://fonts.gstatic.com/s/archivo/v25/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLyTOxK-vA.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+/* latin */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 700;font-stretch:100%;font-display:swap;src:url(https://fonts.gstatic.com/s/archivo/v25/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLydOxI.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* JetBrains Mono — variable font, weights 400–500 */
+/* cyrillic-ext */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+/* cyrillic */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+/* greek */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+/* vietnamese */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+/* latin-ext */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+/* latin */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* Space Grotesk — variable font, weights 400–700 */
+/* vietnamese */
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url(https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPb54C-s0.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+/* latin-ext */
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url(https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPb94C-s0.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+/* latin */
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url(https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* ================= SITE STYLES ================= */
+:root{
+  --red:#FF2800;
+  --red-dark:#c21e00;
+  --bg:#0a0a0b;
+  --bg-2:#101013;
+  --bg-3:#16161a;
+  --line:rgba(255,255,255,.08);
+  --txt:#f5f4f2;
+  --txt-2:#a9a8a4;
+  --txt-3:#6d6c68;
+  --font-d:'Space Grotesk',system-ui,sans-serif;
+  --font-b:'Archivo',system-ui,sans-serif;
+  --font-m:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--font-b);line-height:1.6;overflow-x:hidden}
+::selection{background:var(--red);color:#fff}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+.container{width:min(1200px,92%);margin:0 auto}
+h1,h2,h3,h4{font-family:var(--font-d);font-weight:600;line-height:1.08;letter-spacing:-.02em}
+
+/* ---------- NAV ---------- */
+nav{position:fixed;inset:0 0 auto 0;z-index:100;transition:background .35s,border-color .35s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(10,10,11,.86);backdrop-filter:blur(14px);border-color:var(--line)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--font-d);font-weight:700;font-size:1.05rem;letter-spacing:.12em}
+.logo .shield{width:30px;height:30px;background:var(--red);clip-path:polygon(0 0,100% 0,100% 62%,50% 100%,0 62%);display:grid;place-items:center}
+.logo .shield::after{content:"D";color:#fff;font-weight:700;font-size:.85rem;font-family:var(--font-d)}
+.logo span em{font-style:normal;color:var(--red)}
+.nav-links{display:flex;gap:34px;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-2)}
+.nav-links a{position:relative;padding:4px 0;transition:color .25s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--red);transition:width .3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--red);color:#fff;padding:11px 24px;transition:.3s;background:linear-gradient(90deg,var(--red) 0 0) no-repeat left/0% 100%}
+.nav-cta:hover{background-size:100% 100%}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:0}
+.burger span{width:24px;height:2px;background:#fff;transition:.3s}
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .burger{display:flex}
+  nav.open .nav-links{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;background:rgba(10,10,11,.97);padding:28px 5%;gap:22px;border-bottom:1px solid var(--line)}
+}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+#stream{position:absolute;inset:0;width:100%;height:100%}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 68% 45%,transparent 0%,rgba(10,10,11,.55) 55%,var(--bg) 100%)}
+.hero-inner{position:relative;z-index:2;padding-top:110px;padding-bottom:60px;width:min(1200px,92%);margin:0 auto}
+.hero-kicker{display:flex;align-items:center;gap:14px;font-family:var(--font-m);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--txt-2);margin-bottom:28px}
+.hero-kicker::before{content:"";width:44px;height:1px;background:var(--red)}
+.hero h1{font-size:clamp(2.6rem,6.4vw,5.4rem);max-width:14ch}
+.hero h1 .accent{color:var(--red);font-style:italic;font-weight:700}
+.hero-sub{margin-top:26px;max-width:56ch;color:var(--txt-2);font-size:clamp(1rem,1.4vw,1.15rem)}
+.hero-actions{display:flex;gap:18px;margin-top:44px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-d);font-weight:600;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;padding:17px 34px;transition:.3s;cursor:pointer}
+.btn-primary{background:var(--red);color:#fff;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.btn-primary:hover{background:var(--red-dark);transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(255,255,255,.25);color:#fff}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn .arr{transition:transform .3s}
+.btn:hover .arr{transform:translateX(5px)}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--font-m);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--txt-3)}
+.hero-scroll .wheel{width:1px;height:44px;background:linear-gradient(var(--red),transparent);animation:drop 1.8s infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- MARQUEE ---------- */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--bg-2);padding:20px 0}
+.marquee-track{display:flex;gap:64px;width:max-content;animation:mq 26s linear infinite;font-family:var(--font-m);font-size:.78rem;letter-spacing:.24em;text-transform:uppercase;color:var(--txt-3);white-space:nowrap}
+.marquee-track b{color:var(--red);font-weight:500}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- SECTIONS ---------- */
+section{padding:110px 0;position:relative}
+.sec-tag{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-m);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:20px}
+.sec-tag::before{content:"";width:34px;height:1px;background:var(--red)}
+.sec-title{font-size:clamp(2rem,4vw,3.2rem);max-width:22ch}
+.sec-lead{color:var(--txt-2);max-width:64ch;margin-top:20px}
+.divide{border-top:1px solid var(--line)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.stat{background:var(--bg-2);padding:44px 30px;transition:background .35s}
+.stat:hover{background:var(--bg-3)}
+.stat .num{font-family:var(--font-d);font-size:clamp(2.2rem,3.6vw,3.4rem);font-weight:700;color:#fff}
+.stat .num i{font-style:normal;color:var(--red)}
+.stat .lbl{margin-top:8px;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--txt-3)}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- OVERVIEW ---------- */
+.ov-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:start}
+.ov-grid p{color:var(--txt-2);margin-bottom:18px}
+.ov-grid p strong{color:#fff;font-weight:600}
+.ov-points{list-style:none;display:grid;gap:0;border-top:1px solid var(--line)}
+.ov-points li{display:flex;gap:18px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.ov-points .idx{font-family:var(--font-m);color:var(--red);font-size:.8rem;min-width:34px}
+.ov-points h4{font-size:1.05rem;margin-bottom:4px}
+.ov-points p{font-size:.92rem}
+@media(max-width:900px){.ov-grid{grid-template-columns:1fr;gap:44px}}
+
+/* ---------- ARCHITECTURE ---------- */
+.arch{background:var(--bg-2)}
+.arch-wrap{margin-top:60px;border:1px solid var(--line);background:var(--bg);padding:34px 24px 10px;overflow-x:auto}
+.arch svg{width:100%;min-width:960px;display:block}
+.flow-note{display:flex;gap:26px;flex-wrap:wrap;margin-top:26px;font-family:var(--font-m);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3)}
+.flow-note span{display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot.r{background:var(--red)}
+.dot.g{background:#2ecc71}
+.dot.y{background:#f1c40f}
+
+/* ---------- MODULES ---------- */
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:60px}
+.mod{background:var(--bg);padding:42px 34px;position:relative;overflow:hidden;transition:background .4s}
+.mod::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .45s}
+.mod:hover{background:var(--bg-3)}
+.mod:hover::before{transform:scaleX(1)}
+.mod .no{font-family:var(--font-m);font-size:.72rem;color:var(--txt-3);letter-spacing:.2em}
+.mod h3{font-size:1.28rem;margin:14px 0 12px}
+.mod p{color:var(--txt-2);font-size:.94rem}
+.mod .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.mod .tags span{font-family:var(--font-m);font-size:.64rem;letter-spacing:.1em;border:1px solid var(--line);color:var(--txt-2);padding:5px 10px}
+@media(max-width:1000px){.modules{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.modules{grid-template-columns:1fr}}
+
+/* ---------- DOMAINS ---------- */
+.domains{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:60px}
+.dom{background:var(--bg-2);padding:56px 44px;position:relative;overflow:hidden}
+.dom::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;border:1px solid var(--line);transition:.5s}
+.dom:hover::after{border-color:var(--red);transform:scale(1.15)}
+.dom .dom-ico{width:52px;height:52px;border:1px solid var(--red);display:grid;place-items:center;margin-bottom:26px;color:var(--red)}
+.dom h3{font-size:1.7rem;margin-bottom:8px}
+.dom .dom-sub{font-family:var(--font-m);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--txt-3);margin-bottom:24px}
+.dom ul{list-style:none}
+.dom li{display:flex;gap:14px;padding:13px 0;border-top:1px solid var(--line);color:var(--txt-2);font-size:.95rem}
+.dom li::before{content:"—";color:var(--red);font-family:var(--font-m)}
+@media(max-width:900px){.domains{grid-template-columns:1fr}}
+
+/* ---------- BENCHMARKS ---------- */
+.bench{background:var(--bg-2)}
+.bench-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;margin-top:60px;align-items:start}
+.bars{display:grid;gap:26px}
+.bar-row .bar-head{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:9px}
+.bar-head b{font-family:var(--font-m);color:#fff;font-weight:500}
+.bar-head span{color:var(--txt-3);letter-spacing:.08em;text-transform:uppercase;font-size:.68rem}
+.bar{height:6px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0;background:linear-gradient(90deg,var(--red-dark),var(--red));width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.bar-row.on .bar i{width:var(--w)}
+.bench-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.bench-table th{font-family:var(--font-m);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--txt-3);text-align:left;padding:0 14px 14px 0;border-bottom:1px solid var(--line)}
+.bench-table td{padding:16px 14px 16px 0;border-bottom:1px solid var(--line);color:var(--txt-2)}
+.bench-table td:first-child{color:#fff;font-weight:500}
+.bench-table td:last-child{font-family:var(--font-m);color:var(--red)}
+@media(max-width:900px){.bench-grid{grid-template-columns:1fr;gap:50px}}
+
+/* ---------- STACK ---------- */
+.stack{display:flex;flex-wrap:wrap;gap:12px;margin-top:54px}
+.chip{border:1px solid var(--line);padding:13px 22px;font-family:var(--font-m);font-size:.74rem;letter-spacing:.12em;color:var(--txt-2);transition:.3s;cursor:default;background:var(--bg-2)}
+.chip:hover{border-color:var(--red);color:#fff;transform:translateY(-3px)}
+
+/* ---------- AUTHORS ---------- */
+.authors{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:60px}
+.au{background:var(--bg);padding:44px 34px;text-align:left;transition:background .35s}
+.au:hover{background:var(--bg-3)}
+.au .av{width:64px;height:64px;background:linear-gradient(135deg,var(--red),var(--red-dark));display:grid;place-items:center;font-family:var(--font-d);font-weight:700;font-size:1.3rem;margin-bottom:22px;clip-path:polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%)}
+.au h4{font-size:1.08rem}
+.au .role{font-family:var(--font-m);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin:6px 0 14px}
+.au p{color:var(--txt-3);font-size:.86rem}
+@media(max-width:900px){.authors{grid-template-columns:1fr}}
+
+/* ---------- CTA ---------- */
+.cta{text-align:center;background:linear-gradient(rgba(10,10,11,.92),rgba(10,10,11,.92)),repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,40,0,.06) 46px 48px)}
+.cta h2{font-size:clamp(2rem,4.6vw,3.6rem);max-width:18ch;margin:0 auto}
+.cta h2 em{font-style:italic;color:var(--red)}
+.cta p{color:var(--txt-2);margin:22px auto 40px;max-width:52ch}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 34px;background:var(--bg-2)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:50px}
+.foot h5{font-family:var(--font-m);font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--txt-3);margin-bottom:18px}
+.foot a{display:block;color:var(--txt-2);font-size:.9rem;padding:5px 0;transition:color .25s}
+.foot a:hover{color:var(--red)}
+.foot p{color:var(--txt-3);font-size:.86rem;max-width:36ch}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:56px;padding-top:26px;border-top:1px solid var(--line);font-family:var(--font-m);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-3)}
+@media(max-width:800px){.foot{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#top"><span class="shield"></span><span>DATA<em>NEXUS</em></span></a>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#modules">Modules</a>
+      <a href="#domains">Domains</a>
+      <a href="#benchmarks">Results</a>
+      <a href="#stack">Stack</a>
+    </div>
+    <a class="nav-cta" href="#contact">View Report</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <canvas id="stream"></canvas>
+  <div class="hero-inner">
+    <div class="hero-kicker">Final Year Project · Data Engineering</div>
+    <h1>Real-Time Data Warehouse &amp; <span class="accent">Preprocessing</span> Platform</h1>
+    <p class="hero-sub">Design and development of a scalable, fault-tolerant data warehouse with streaming ETL pipelines — engineered to power analytics for <strong style="color:#fff">e-commerce</strong> and <strong style="color:#fff">healthcare</strong> workloads at production scale.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#architecture">Explore Architecture <span class="arr">→</span></a>
+      <a class="btn btn-ghost" href="#benchmarks">Benchmark Results <span class="arr">→</span></a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="wheel"></div></div>
+</header>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="mq">
+    <span>Stream Ingestion <b>·</b> Apache Kafka <b>·</b> Spark Structured Streaming <b>·</b> Change Data Capture <b>·</b> Star Schema Design <b>·</b> Data Quality Gates <b>·</b> dbt Transformations <b>·</b> Sub-Second Latency <b>·</b>&nbsp;</span>
+  </div>
+</div>
+
+<!-- ================= STATS ================= -->
+<section style="padding-top:90px">
+  <div class="container">
+    <div class="stats rv">
+      <div class="stat"><div class="num"><span data-count="2.4" data-dec="1">0</span><i>M+</i></div><div class="lbl">Events / Second Ingested</div></div>
+      <div class="stat"><div class="num">&lt;<span data-count="150">0</span><i>ms</i></div><div class="lbl">End-to-End Pipeline Latency</div></div>
+      <div class="stat"><div class="num"><span data-count="99.98" data-dec="2">0</span><i>%</i></div><div class="lbl">Pipeline Uptime (SLA)</div></div>
+      <div class="stat"><div class="num"><span data-count="50">0</span><i>+</i></div><div class="lbl">Heterogeneous Data Sources</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OVERVIEW ================= -->
+<section class="divide" id="overview">
+  <div class="container ov-grid">
+    <div class="rv">
+      <div class="sec-tag">01 — Project Overview</div>
+      <h2 class="sec-title">From raw events to decision-ready data — in seconds, not days.</h2>
+      <div style="margin-top:26px">
+        <p>Modern e-commerce and healthcare organizations generate <strong>massive, heterogeneous, high-velocity data</strong> — clickstreams, transactions, IoT device readings, EHR events, and third-party APIs. Traditional batch warehouses cannot keep pace.</p>
+        <p>This project presents the <strong>design and development of a real-time data warehouse</strong> with a comprehensive preprocessing layer: ingestion, cleansing, deduplication, schema enforcement, and enrichment — orchestrated end-to-end and served to BI/analytics consumers with sub-second freshness.</p>
+        <p>The solution was validated on two demanding domains: <strong>real-time e-commerce analytics</strong> (funnels, inventory, personalization) and <strong>healthcare operational analytics</strong> (patient flow, equipment telemetry, compliance reporting).</p>
+      </div>
+    </div>
+    <ul class="ov-points rv">
+      <li><span class="idx">/01</span><div><h4>Lambda → Kappa Stream Architecture</h4><p>Unified streaming-first design eliminating dual-path complexity and reconciliation drift.</p></div></li>
+      <li><span class="idx">/02</span><div><h4>Automated Data Quality Gates</h4><p>Great Expectations–style validation at every stage; quarantine path for poisoned records.</p></div></li>
+      <li><span class="idx">/03</span><div><h4>Change Data Capture Integration</h4><p>Debezium-based CDC keeps OLTP systems and the warehouse continuously synchronized.</p></div></li>
+      <li><span class="idx">/04</span><div><h4>Cost-Aware, Schema-Evolved Storage</h4><p>Medallion layout (Bronze → Silver → Gold) with partitioning, clustering, and auto-compaction.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section class="arch divide" id="architecture">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">02 — System Architecture</div>
+      <h2 class="sec-title">End-to-end streaming pipeline, engineered for resilience.</h2>
+      <p class="sec-lead">Five logical layers — source capture, stream transport, preprocessing, warehouse storage, and serving — decoupled via durable message queues so every component scales independently.</p>
+    </div>
+    <div class="arch-wrap rv">
+      <svg viewBox="0 0 1200 500" fill="none" font-family="JetBrains Mono, monospace">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="#FF2800"/>
+          </marker>
+          <linearGradient id="lg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#FF2800" stop-opacity="0"/><stop offset="1" stop-color="#FF2800"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Layer 1 : Sources -->
+        <text x="90" y="36" font-size="12" letter-spacing="3" fill="#6d6c68">SOURCES</text>
+        <g font-size="12" fill="#f5f4f2">
+          <rect x="30" y="60" width="190" height="46" stroke="rgba(255,255,255,.18)"/><text x="50" y="88">E-Commerce OLTP</text>
+          <rect x="30" y="118" width="190" height="46" stroke="rgba(255,255,255,.18)"/><text x="50" y="146">EHR / HL7-FHIR</text>
+          <rect x="30" y="176" width="190" height="46" stroke="rgba(255,255,255,.18)"/><text x="50" y="204">IoT / Telemetry</text>
+          <rect x="30" y="234" width="190" height="46" stroke="rgba(255,255,255,.18)"/><text x="50" y="262">3rd-Party APIs</text>
+        </g>
+
+        <!-- Layer 2 : Ingestion -->
+        <text x="330" y="36" font-size="12" letter-spacing="3" fill="#6d6c68">INGESTION</text>
+        <rect x="300" y="60" width="200" height="112" stroke="#FF2800" stroke-opacity=".7"/>
+        <text x="322" y="92" font-size="13" fill="#fff">CDC · Debezium</text>
+        <text x="322" y="114" font-size="11" fill="#a9a8a4">transaction log capture</text>
+        <text x="322" y="140" font-size="13" fill="#fff">REST / Webhook Gate</text>
+        <text x="322" y="160" font-size="11" fill="#a9a8a4">event API gateway</text>
+
+        <!-- Layer 3 : Broker -->
+        <text x="590" y="36" font-size="12" letter-spacing="3" fill="#6d6c68">STREAM BUS</text>
+        <rect x="570" y="60" width="200" height="220" stroke="rgba(255,255,255,.18)"/>
+        <text x="592" y="96" font-size="14" fill="#fff">Apache Kafka</text>
+        <text x="592" y="118" font-size="11" fill="#a9a8a4">partitioned topics</text>
+        <rect x="592" y="136" width="156" height="30" stroke="rgba(255,255,255,.12)"/><text x="606" y="155" font-size="10" fill="#a9a8a4">orders.raw</text>
+        <rect x="592" y="174" width="156" height="30" stroke="rgba(255,255,255,.12)"/><text x="606" y="193" font-size="10" fill="#a9a8a4">patients.cdc</text>
+        <rect x="592" y="212" width="156" height="30" stroke="rgba(255,255,255,.12)"/><text x="606" y="231" font-size="10" fill="#a9a8a4">telemetry.iot</text>
+
+        <!-- Layer 4 : Preprocessing -->
+        <text x="860" y="36" font-size="12" letter-spacing="3" fill="#6d6c68">PREPROCESSING</text>
+        <rect x="840" y="60" width="200" height="272" stroke="#FF2800" stroke-opacity=".7"/>
+        <text x="862" y="94" font-size="14" fill="#fff">Spark Streaming</text>
+        <text x="862" y="126" font-size="11" fill="#a9a8a4">▸ deduplication</text>
+        <text x="862" y="148" font-size="11" fill="#a9a8a4">▸ schema validation</text>
+        <text x="862" y="170" font-size="11" fill="#a9a8a4">▸ missing-value imputation</text>
+        <text x="862" y="192" font-size="11" fill="#a9a8a4">▸ normalization &amp; encoding</text>
+        <text x="862" y="214" font-size="11" fill="#a9a8a4">▸ PII masking / HIPAA rules</text>
+        <text x="862" y="236" font-size="11" fill="#a9a8a4">▸ late-event handling (watermarks)</text>
+        <text x="862" y="258" font-size="11" fill="#a9a8a4">▸ quality gates + quarantine</text>
+        <text x="862" y="290" font-size="13" fill="#fff">Airflow Orchestration</text>
+        <text x="862" y="310" font-size="11" fill="#a9a8a4">schedules · retries · SLAs</text>
+
+        <!-- Layer 5 : Warehouse -->
+        <text x="90" y="330" font-size="12" letter-spacing="3" fill="#6d6c68">WAREHOUSE</text>
+        <g>
+          <rect x="30" y="352" width="160" height="70" stroke="rgba(255,255,255,.18)"/><text x="50" y="380" font-size="12" fill="#f1c40f">BRONZE</text><text x="50" y="400" font-size="10" fill="#a9a8a4">raw immutable</text>
+          <rect x="210" y="352" width="160" height="70" stroke="rgba(255,255,255,.18)"/><text x="230" y="380" font-size="12" fill="#a9a8a4">SILVER</text><text x="230" y="400" font-size="10" fill="#a9a8a4">cleaned · conformed</text>
+          <rect x="390" y="352" width="160" height="70" stroke="#FF2800" stroke-opacity=".7"/><text x="410" y="380" font-size="12" fill="#FF2800">GOLD</text><text x="410" y="400" font-size="10" fill="#a9a8a4">star schema · marts</text>
+          <text x="575" y="380" font-size="12" fill="#fff">Cloud Warehouse</text>
+          <text x="575" y="400" font-size="10" fill="#a9a8a4">partitioned · clustered</text>
+        </g>
+
+        <!-- Layer 6 : Serving -->
+        <text x="860" y="392" font-size="12" letter-spacing="3" fill="#6d6c68">SERVING</text>
+        <g font-size="12" fill="#f5f4f2">
+          <rect x="840" y="410" width="200" height="40" stroke="rgba(255,255,255,.18)"/><text x="862" y="435">BI Dashboards · Looker</text>
+        </g>
+        <text x="862" y="474" font-size="11" fill="#a9a8a4">+ ML feature store · alerting</text>
+
+        <!-- Arrows -->
+        <path class="pulse-line" d="M220 153 H296" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M500 116 H566" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M770 170 H836" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M940 332 V350" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M840 386 H552" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M110 330 V346" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M190 387 H204" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M370 387 H384" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M550 387 H570" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+        <path d="M700 405 H836" stroke="url(#lg)" stroke-width="1.5" marker-end="url(#ah)"/>
+
+        <!-- animated packets -->
+        <circle r="4" fill="#FF2800"><animateMotion dur="2.4s" repeatCount="indefinite" path="M220 153 H296"/></circle>
+        <circle r="4" fill="#FF2800"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite" path="M500 116 H566"/></circle>
+        <circle r="4" fill="#FF2800"><animateMotion dur="2.4s" begin="1.4s" repeatCount="indefinite" path="M770 170 H836"/></circle>
+        <circle r="4" fill="#2ecc71"><animateMotion dur="3s" repeatCount="indefinite" path="M840 386 H552"/></circle>
+        <circle r="4" fill="#2ecc71"><animateMotion dur="3s" begin="1.5s" repeatCount="indefinite" path="M700 405 H836"/></circle>
+      </svg>
+      <div class="flow-note">
+        <span><span class="dot r"></span> Hot path — real-time stream</span>
+        <span><span class="dot g"></span> Serving / analytics read path</span>
+        <span><span class="dot y"></span> Medallion storage tiers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODULES ================= -->
+<section class="divide" id="modules">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">03 — Core Modules</div>
+      <h2 class="sec-title">Six building blocks. One continuous flow of trusted data.</h2>
+    </div>
+    <div class="modules">
+      <div class="mod rv"><div class="no">M — 01</div><h3>Stream Ingestion Layer</h3><p>Low-latency capture from OLTP databases via CDC, plus API and file-based ingestion with exactly-once semantics and automatic schema registration.</p><div class="tags"><span>Debezium</span><span>Kafka Connect</span><span>Avro</span></div></div>
+      <div class="mod rv"><div class="no">M — 02</div><h3>Preprocessing Engine</h3><p>Windowed stream transformations handling deduplication, outlier filtering, imputation, standardization, and entity resolution at scale.</p><div class="tags"><span>Spark Structured Streaming</span><span>Watermarks</span><span>State Stores</span></div></div>
+      <div class="mod rv"><div class="no">M — 03</div><h3>Data Quality Framework</h3><p>Declarative expectation suites executed per micro-batch — completeness, uniqueness, validity — with alerting and a dead-letter quarantine topic.</p><div class="tags"><span>Great Expectations</span><span>Slack Alerts</span></div></div>
+      <div class="mod rv"><div class="no">M — 04</div><h3>Warehouse &amp; Modeling</h3><p>Cloud-native columnar warehouse organized in medallion tiers with Kimball star schemas, slowly changing dimensions, and incremental marts.</p><div class="tags"><span>BigQuery</span><span>dbt</span><span>Star Schema</span></div></div>
+      <div class="mod rv"><div class="no">M — 05</div><h3>Orchestration &amp; Observability</h3><p>Pipeline DAGs with dependency-aware scheduling, SLA monitoring, data freshness tracking, and full lineage from source to dashboard.</p><div class="tags"><span>Airflow</span><span>OpenLineage</span><span>Grafana</span></div></div>
+      <div class="mod rv"><div class="no">M — 06</div><h3>Privacy &amp; Compliance</h3><p>Field-level PII tokenization, role-based access, audit trails, and healthcare-grade controls aligned with HIPAA/GDPR requirements.</p><div class="tags"><span>RBAC</span><span>Encryption</span><span>Audit Logs</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOMAINS ================= -->
+<section class="divide" id="domains">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">04 — Dual-Domain Validation</div>
+      <h2 class="sec-title">One platform, two demanding industries.</h2>
+    </div>
+    <div class="domains">
+      <div class="dom rv">
+        <div class="dom-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.6 11h10.4l2-8H7"/></svg></div>
+        <h3>E-Commerce Analytics</h3>
+        <div class="dom-sub">Real-Time Retail Intelligence</div>
+        <ul>
+          <li>Live sales funnels, cart-abandonment, and conversion tracking</li>
+          <li>Inventory synchronization across warehouses with low-stock alerting</li>
+          <li>Clickstream sessionization powering personalization engines</li>
+          <li>Fraud-signal enrichment in under 200ms at checkout</li>
+        </ul>
+      </div>
+      <div class="dom rv">
+        <div class="dom-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Healthcare Analytics</h3>
+        <div class="dom-sub">Clinical &amp; Operational Insight</div>
+        <ul>
+          <li>HL7 / FHIR event ingestion with automated de-identification</li>
+          <li>Patient-flow dashboards: admissions, bed occupancy, wait times</li>
+          <li>Medical IoT telemetry anomaly detection for critical devices</li>
+          <li>Audit-ready reporting for compliance and quality accreditation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BENCHMARKS ================= -->
+<section class="bench divide" id="benchmarks">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">05 — Evaluation &amp; Results</div>
+      <h2 class="sec-title">Benchmarked under production-grade load.</h2>
+      <p class="sec-lead">The platform was stress-tested with synthetic and real workloads across both domains. Key findings below.</p>
+    </div>
+    <div class="bench-grid">
+      <div class="bars rv">
+        <div class="bar-row" style="--w:92%"><div class="bar-head"><span>Throughput vs. batch baseline</span><b>+92%</b></div><div class="bar"><i></i></div></div>
+        <div class="bar-row" style="--w:97%"><div class="bar-head"><span>Data-quality pass rate (post-gates)</span><b>97.4%</b></div><div class="bar"><i></i></div></div>
+        <div class="bar-row" style="--w:88%"><div class="bar-head"><span>Duplicate-event elimination</span><b>88%</b></div><div class="bar"><i></i></div></div>
+        <div class="bar-row" style="--w:64%"><div class="bar-head"><span>Storage cost reduction (tiering + compaction)</span><b>−36%</b></div><div class="bar"><i></i></div></div>
+        <div class="bar-row" style="--w:99%"><div class="bar-head"><span>Pipeline SLA adherence</span><b>99.98%</b></div><div class="bar"><i></i></div></div>
+      </div>
+      <div class="rv">
+        <table class="bench-table">
+          <thead><tr><th>Metric</th><th>Batch DWH (Legacy)</th><th>This Solution</th></tr></thead>
+          <tbody>
+            <tr><td>Data freshness</td><td>6–24 hours</td><td>&lt; 150 ms</td></tr>
+            <tr><td>Peak throughput</td><td>0.2M rows/min</td><td>2.4M events/s</td></tr>
+            <tr><td>Preprocessing coverage</td><td>Manual scripts</td><td>Automated, 40+ rules</td></tr>
+            <tr><td>Schema drift response</td><td>Days (ETL break)</td><td>Minutes (registry + evolve)</td></tr>
+            <tr><td>Analytics query latency</td><td>Minutes</td><td>Sub-second</td></tr>
+            <tr><td>Recovery (node failure)</td><td>Full reload</td><td>Checkpoint resume</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STACK ================= -->
+<section class="divide" id="stack">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">06 — Technology Stack</div>
+      <h2 class="sec-title">A best-of-breed, open-first toolchain.</h2>
+    </div>
+    <div class="stack rv">
+      <span class="chip">Apache Kafka</span><span class="chip">Debezium CDC</span><span class="chip">Spark Structured Streaming</span>
+      <span class="chip">Apache Airflow</span><span class="chip">dbt Core</span><span class="chip">BigQuery / Redshift</span>
+      <span class="chip">Delta Lake</span><span class="chip">Great Expectations</span><span class="chip">Docker</span>
+      <span class="chip">Kubernetes</span><span class="chip">Terraform</span><span class="chip">Grafana</span>
+      <span class="chip">Looker Studio</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">Protobuf / Avro</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AUTHORS ================= -->
+<section class="divide" id="authors">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag">07 — Project Team</div>
+      <h2 class="sec-title">Designed, built, and evaluated by.</h2>
+    </div>
+    <div class="authors rv">
+      <div class="au"><div class="av">AR</div><h4>A. Rahman</h4><div class="role">Lead · Data Engineering</div><p>Architecture design, streaming pipelines, and warehouse modeling.</p></div>
+      <div class="au"><div class="av">SK</div><h4>S. Khan</h4><div class="role">Preprocessing &amp; Quality</div><p>Cleansing framework, validation gates, and healthcare compliance logic.</p></div>
+      <div class="au"><div class="av">MT</div><h4>M. Tanvir</h4><div class="role">Analytics &amp; Evaluation</div><p>Dashboard layer, benchmark methodology, and results analysis.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta divide" id="contact">
+  <div class="container rv">
+    <h2>Data that moves at the <em>speed of the business.</em></h2>
+    <p>Explore the full technical report, pipeline source code, and benchmark datasets produced for this project.</p>
+    <div class="hero-actions" style="justify-content:center">
+      <a class="btn btn-primary" href="#top">Download Full Report <span class="arr">↓</span></a>
+      <a class="btn btn-ghost" href="#architecture">View on GitHub <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top" style="margin-bottom:18px"><span class="shield"></span><span>DATA<em>NEXUS</em></span></a>
+        <p>Real-Time Data Warehouse &amp; Data Preprocessing Solution for E-Commerce and Healthcare Analytics — a capstone engineering project.</p>
+      </div>
+      <div>
+        <h5>Project</h5>
+        <a href="#overview">Overview</a><a href="#architecture">Architecture</a><a href="#modules">Modules</a><a href="#benchmarks">Results</a>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <a href="#">Technical Report (PDF)</a><a href="#">Source Repository</a><a href="#">Benchmark Dataset</a><a href="#">Presentation Deck</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 DataNexus Project Team</span>
+      <span>Built for academic demonstration</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- NAV ---------- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
+/* ---------- MARQUEE duplicate ---------- */
+const mq=document.getElementById('mq');mq.innerHTML+=mq.innerHTML;
+
+/* ---------- HERO CANVAS : data stream particles ---------- */
+const cv=document.getElementById('stream'),ctx=cv.getContext('2d');
+let W,H,pts=[];
+function resize(){W=cv.width=cv.offsetWidth*devicePixelRatio;H=cv.height=cv.offsetHeight*devicePixelRatio;
+  const n=Math.min(90,Math.floor(W/22));
+  pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()*.5+.15)*devicePixelRatio,vy:(Math.random()-.5)*.35*devicePixelRatio,r:(Math.random()*1.6+.6)*devicePixelRatio,red:Math.random()<.18}));
+}
+resize();addEventListener('resize',resize);
+(function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of pts){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x>W+10)p.x=-10;if(p.x<-10)p.x=W+10;
+    if(p.y>H+10)p.y=-10;if(p.y<-10)p.y=H+10;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fillStyle=p.red?'rgba(255,40,0,.85)':'rgba(255,255,255,.45)';ctx.fill();
+  }
+  // faint links
+  ctx.lineWidth=devicePixelRatio*.5;
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy,max=(140*devicePixelRatio)**2;
+    if(d<max){ctx.strokeStyle=`rgba(255,40,0,${.14*(1-d/max)})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- REVEAL ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ---------- COUNTERS ---------- */
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,end=parseFloat(el.dataset.count),dec=parseInt(el.dataset.dec||0),t0=performance.now();
+  (function tick(t){const p=Math.min((t-t0)/1600,1),ease=1-Math.pow(1-p,3);
+    el.textContent=(end*ease).toFixed(dec);
+    if(p<1)requestAnimationFrame(tick);})(t0);
+}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* ---------- BARS ---------- */
+const bio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');bio.unobserve(e.target);}}),{threshold:.4});
+document.querySelectorAll('.bar-row').forEach(el=>bio.observe(el));
+</script>
+</body>
+</html>
